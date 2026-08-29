@@ -1,0 +1,7 @@
+funcion sumar(a, b) {
+    devolver a + b
+}
+
+resultado = sumar(5, 3)
+
+mostrar(resultado)

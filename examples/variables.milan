@@ -1,0 +1,7 @@
+nombre = "Ana"
+edad = 20
+activo = verdadero
+
+mostrar(nombre)
+mostrar(edad)
+mostrar(activo)

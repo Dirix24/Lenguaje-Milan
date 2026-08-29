@@ -1,0 +1,3 @@
+para numero en [1, 2, 3, 4, 5] {
+    mostrar(numero)
+}
