@@ -70,7 +70,8 @@ ALLOWED = (
     ast.Add, ast.Sub, ast.Mult, ast.Div, ast.FloorDiv, ast.Mod, ast.Pow,
     ast.USub, ast.UAdd, ast.Not, ast.And, ast.Or, ast.Eq, ast.NotEq,
     ast.Lt, ast.LtE, ast.Gt, ast.GtE, ast.If, ast.While, ast.For,
-    ast.List, ast.Tuple, ast.Call, ast.FunctionDef, ast.arguments,\n    ast.Subscript, ast.Slice,
+    ast.List, ast.Tuple, ast.Call, ast.FunctionDef, ast.arguments,
+    ast.Subscript, ast.Slice,
     ast.arg, ast.Return, ast.Pass,
 )
 BUILTINS = {"print": print, "range": range, "len": len}
@@ -102,7 +103,8 @@ def execute(source):
     try:
         tree = ast.parse(translated, filename="<milan>")
         validate(tree)
-        environment = {"__builtins__": BUILTINS}\n        exec(compile(tree, "<milan>", "exec"), environment, environment)
+        environment = {"__builtins__": BUILTINS}
+        exec(compile(tree, "<milan>", "exec"), environment, environment)
     except (SyntaxError, TypeError, NameError, ZeroDivisionError, RecursionError, IndexError, ValueError, OverflowError) as exc:
         raise MilanError(str(exc)) from exc
 
