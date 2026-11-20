@@ -102,7 +102,7 @@ def execute(source):
     try:
         tree = ast.parse(translated, filename="<milan>")
         validate(tree)
-        exec(compile(tree, "<milan>", "exec"), {"__builtins__": BUILTINS}, {})
+        environment = {"__builtins__": BUILTINS}\n        exec(compile(tree, "<milan>", "exec"), environment, environment)
     except (SyntaxError, TypeError, NameError, ZeroDivisionError, RecursionError, IndexError, ValueError, OverflowError) as exc:
         raise MilanError(str(exc)) from exc
 
