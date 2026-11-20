@@ -45,5 +45,25 @@ class TestMilan(unittest.TestCase):
         with self.assertRaises(MilanError):
             self.run_milan("si verdadero {\nmostrar(1)")
 
+
+    def test_bilingual_function(self):
+        source = 'function sumar(a, b) {\nreturn a + b\n}\nprint(sumar(2, 3))'
+        self.assertEqual(self.run_milan(source), "5")
+
+    def test_mixed_keywords(self):
+        source = 'x = verdadero\nif x {\nprint("ok")\n} else {\nmostrar("no")\n}'
+        self.assertEqual(self.run_milan(source), "ok")
+
+    def test_list_indexing(self):
+        self.assertEqual(self.run_milan("datos = [10, 20, 30]\\nmostrar(datos[1])"), "20")
+
+    def test_function_can_call_another_function(self):
+        source = "funcion doble(x) {\nreturn x * 2\n}\nfuncion resultado(x) {\nreturn doble(x)\n}\nmostrar(resultado(4))"
+        self.assertEqual(self.run_milan(source), "8")
+
+    def test_english_loop(self):
+        source = 'for n in [1, 2] {\nprint(n)\n}'
+        self.assertEqual(self.run_milan(source), "1\\n2")
+
 if __name__ == "__main__":
     unittest.main()

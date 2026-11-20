@@ -9,11 +9,11 @@ from pathlib import Path
 class MilanError(Exception):
     pass
 
-KEYWORDS = {"verdadero": "True", "falso": "False", "y": "and", "o": "or", "no": "not"}
+KEYWORDS = {"verdadero": "True", "falso": "False", "y": "and", "o": "or", "no": "not", "true": "True", "false": "False"}
 HEADER = [
     (re.compile(r"si\s+(.+)"), lambda m: "if " + m[1] + ":"),
     (re.compile(r"sino\s+si\s+(.+)"), lambda m: "elif " + m[1] + ":"),
-    (re.compile(r"sino"), lambda m: "else:"),
+    (re.compile(r"(?:sino|else)"), lambda m: "else:"),
     (re.compile(r"mientras\s+(.+)"), lambda m: "while " + m[1] + ":"),
     (re.compile(r"para\s+([a-zA-Z_][\w]*)\s+en\s+(.+)"), lambda m: "for " + m[1] + " in " + m[2] + ":"),
     (re.compile(r"funcion\s+([a-zA-Z_][\w]*)\s*\(([^()]*)\)"), lambda m: "def " + m[1] + "(" + m[2] + "):"),
@@ -71,6 +71,7 @@ ALLOWED = (
     ast.USub, ast.UAdd, ast.Not, ast.And, ast.Or, ast.Eq, ast.NotEq,
     ast.Lt, ast.LtE, ast.Gt, ast.GtE, ast.If, ast.While, ast.For,
     ast.List, ast.Tuple, ast.Call, ast.FunctionDef, ast.arguments,
+    ast.Subscript, ast.Slice,
     ast.arg, ast.Return, ast.Pass,
 )
 BUILTINS = {"print": print, "range": range, "len": len}
@@ -102,8 +103,9 @@ def execute(source):
     try:
         tree = ast.parse(translated, filename="<milan>")
         validate(tree)
-        exec(compile(tree, "<milan>", "exec"), {"__builtins__": BUILTINS}, {})
-    except (SyntaxError, TypeError, NameError, ZeroDivisionError, RecursionError) as exc:
+        environment = {"__builtins__": BUILTINS}
+        exec(compile(tree, "<milan>", "exec"), environment, environment)
+    except (SyntaxError, TypeError, NameError, ZeroDivisionError, RecursionError, IndexError, ValueError, OverflowError) as exc:
         raise MilanError(str(exc)) from exc
 
 def main():
