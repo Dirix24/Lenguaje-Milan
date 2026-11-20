@@ -1,0 +1,1 @@
+{"scopeName":"source.milan","patterns":[{"name":"comment.line.number-sign.milan","match":"#.*$"},{"name":"string.quoted.double.milan","begin":"\"","end":"\""},{"name":"keyword.control.milan","match":"\\b(si|sino|if|else|mientras|while|para|for|funcion|function|devolver|return)\\b"}]}
