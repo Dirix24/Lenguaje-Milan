@@ -1,8 +1,10 @@
 # Milán
 
+<img src="vscode-milan/logo.png" alt="Logotipo de Milán" width="112">
+
 > La única limitación es tu imaginación.
 
-Milán es un lenguaje de programación gratuito y abierto bajo licencia MIT. Puedes mezclar español e inglés en el mismo programa. Esta rama contiene la candidata **1.0.0-rc.1**.
+Milán es un lenguaje de programación gratuito y abierto bajo licencia MIT. Puedes mezclar español e inglés en el mismo programa. Esta rama contiene la candidata **1.1.0-rc.2**.
 
 ## Primer programa
 
@@ -28,6 +30,10 @@ En VS Code, instala el VSIX de Milán, abre la carpeta de tu proyecto y pulsa **
 - [Extensión de VS Code](vscode-milan/README.md)
 - [Pruebas](tests/README.md)
 - [Cambios y trabajo pendiente](CHANGELOG.md)
+
+## Programa de ejemplo
+
+Prueba [la lista de tareas persistente](examples/tareas.milan). Puedes añadir, completar y quitar tareas. [Guía para instalar el comando y ejecutar el ejemplo](docs/ejecutar.md).
 
 ## Principios
 

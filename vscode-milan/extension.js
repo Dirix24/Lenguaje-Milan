@@ -10,7 +10,12 @@ const WORDS = [
   'mientras', 'while', 'para', 'for', 'en', 'in', 'verdadero', 'falso', 'true', 'false',
   'y', 'o', 'no', 'and', 'or', 'not', 'mostrar', 'print', 'entrada', 'input',
   'rango', 'range', 'longitud', 'len', 'incluir', 'include',
-  'leer_archivo', 'read_file', 'escribir_archivo', 'write_file'
+  'leer_archivo', 'read_file', 'escribir_archivo', 'write_file',
+  'actualizar_archivo', 'update_file', 'intentar', 'try', 'capturar', 'except',
+  'entero', 'int', 'decimal', 'float', 'agregar', 'append', 'quitar', 'pop',
+  'a_json', 'to_json', 'desde_json', 'from_json', 'romper', 'break', 'continuar', 'continue',
+  'recortar', 'trim', 'minusculas', 'lower', 'mayusculas', 'upper',
+  'dividir', 'split', 'unir', 'join'
 ];
 
 function settings(context, uri) {

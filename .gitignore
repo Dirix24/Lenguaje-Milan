@@ -12,3 +12,6 @@ obj/
 /vscode-milan/interpreter/
 /vscode-milan/LICENSE
 *.vsix
+*.egg-info/
+
+.venv/

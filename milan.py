@@ -7,6 +7,7 @@ import os
 import re
 import stat
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -26,8 +27,9 @@ WORDS = {
     "en": "in", "funcion": "def", "function": "def", "devolver": "return",
     "verdadero": "True", "falso": "False", "true": "True", "false": "False",
     "y": "and", "o": "or", "no": "not",
+    "intentar": "try", "capturar": "except", "romper": "break", "continuar": "continue",
 }
-HEADERS = {"if", "elif", "else", "while", "for", "def"}
+HEADERS = {"if", "elif", "else", "while", "for", "def", "try", "except"}
 # Cada cadena es un solo token. Las llaves y los comentarios se reconocen fuera de ella.
 TOKEN = re.compile(r"""\s+|\#.*|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\w+|.""")
 STRING_PREFIXES = {"b", "br", "f", "fr", "r", "rb", "rf", "u", "t", "tr", "rt"}
@@ -81,8 +83,10 @@ def compile_milan(source):
         opens = tokens[-1] == "{"
         if opens:
             tokens.pop()
-        if not tokens or any(token in {"{", "}"} for token in tokens):
-            raise MilanError("Las llaves deben delimitar un bloque", number)
+        if not tokens:
+            raise MilanError("Falta la cabecera del bloque", number)
+        if tokens[0] in {"intentar", "try", "capturar", "except"} and len(tokens) != 1:
+            raise MilanError("Usa intentar o capturar sin argumentos", number)
 
         translated = [WORDS.get(token, token) for token in tokens]
         if translated[:2] == ["else", "if"]:
@@ -91,7 +95,7 @@ def compile_milan(source):
         if header and not opens:
             raise MilanError("Falta '{' para abrir el bloque", number)
         if opens and not header:
-            raise MilanError("Se esperaba si, sino, mientras, para o funcion antes de '{'", number)
+            raise MilanError("Se esperaba si, sino, mientras, para, funcion, intentar o capturar antes de '{'", number)
 
         parts = []
         start = significant[0].start()
@@ -114,13 +118,39 @@ ALLOWED = (
     ast.Lt, ast.LtE, ast.Gt, ast.GtE, ast.If, ast.While, ast.For,
     ast.List, ast.Tuple, ast.Call, ast.FunctionDef, ast.arguments,
     ast.Subscript, ast.Slice, ast.arg, ast.Return, ast.Pass,
+    ast.Dict, ast.Try, ast.ExceptHandler, ast.Break, ast.Continue, ast.In, ast.NotIn,
 )
+
+
+def append_item(items, value):
+    if not isinstance(items, list):
+        raise TypeError("agregar requiere una lista")
+    items.append(value)
+
+
+def pop_item(items, index=-1):
+    if not isinstance(items, list):
+        raise TypeError("quitar requiere una lista")
+    return items.pop(index)
+
+
+def to_json(value):
+    return json.dumps(value, ensure_ascii=False, allow_nan=False)
+
+
 BASIC = {
     "print": print, "mostrar": print, "range": range, "rango": range,
     "len": len, "longitud": len, "input": input, "entrada": input,
+    "entero": int, "int": int, "decimal": float, "float": float,
+    "agregar": append_item, "append": append_item, "quitar": pop_item, "pop": pop_item,
+    "recortar": str.strip, "trim": str.strip,
+    "minusculas": str.lower, "lower": str.lower,
+    "mayusculas": str.upper, "upper": str.upper,
+    "dividir": str.split, "split": str.split, "unir": str.join, "join": str.join,
+    "a_json": to_json, "to_json": to_json, "desde_json": json.loads, "from_json": json.loads,
 }
 INCLUDE_NAMES = {"incluir", "include"}
-CAPABILITIES = INCLUDE_NAMES | {"leer_archivo", "read_file", "escribir_archivo", "write_file"}
+CAPABILITIES = INCLUDE_NAMES | {"leer_archivo", "read_file", "escribir_archivo", "write_file", "actualizar_archivo", "update_file"}
 RESERVED = set(dir(builtins)) | CAPABILITIES | BASIC.keys() | WORDS.keys()
 
 
@@ -162,8 +192,18 @@ def validate(tree):
                 or not isinstance(node.args[0].value, str)
             ):
                 raise MilanError('Escribe incluir("archivo.milan") en el nivel principal', line)
-        if isinstance(node, ast.Assign) and any(not isinstance(t, ast.Name) for t in node.targets):
-            raise MilanError("Solo se admiten asignaciones a variables", line)
+        if isinstance(node, ast.Assign) and any(
+            not isinstance(target, (ast.Name, ast.Subscript)) for target in node.targets
+        ):
+            raise MilanError("Asigna a una variable, un índice o una clave", line)
+        if isinstance(node, ast.Dict) and None in node.keys:
+            raise MilanError("Escribe pares de clave y valor en el diccionario", line)
+        if isinstance(node, ast.Try) and (
+            node.orelse or node.finalbody or len(node.handlers) != 1
+        ):
+            raise MilanError("Usa un solo bloque capturar después de intentar", line)
+        if isinstance(node, ast.ExceptHandler) and (node.type is not None or node.name):
+            raise MilanError("Usa capturar sin argumentos", line)
         if isinstance(node, ast.For) and (not isinstance(node.target, ast.Name) or node.orelse):
             raise MilanError("Usa una variable en el bucle para y reserva sino para si", line)
         if isinstance(node, ast.While) and node.orelse:
@@ -175,9 +215,17 @@ def prepare(source, filename):
     try:
         tree = ast.parse(compile_milan(source), filename=filename)
         includes = validate(tree)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ExceptHandler):
+                node.type = ast.copy_location(ast.Name(id="_errores_milan", ctx=ast.Load()), node)
         return compile(tree, filename, "exec"), includes
     except SyntaxError as exc:
-        raise MilanError(f"Sintaxis inválida ({exc.msg})", exc.lineno, filename) from exc
+        loop_errors = {
+            "'break' outside loop": "Usa romper o break dentro de un bucle",
+            "'continue' not properly in loop": "Usa continuar o continue dentro de un bucle",
+        }
+        message = loop_errors.get(exc.msg, f"Sintaxis inválida ({exc.msg})")
+        raise MilanError(message, exc.lineno, filename) from exc
     except (ValueError, RecursionError) as exc:
         raise MilanError("El código contiene una expresión inválida o demasiado compleja",
                          source=filename) from exc
@@ -212,6 +260,11 @@ def read_text(path):
         if not stat.S_ISREG(info.st_mode) or info.st_nlink > 1:
             raise MilanError(f"Se esperaba un archivo normal: {path.name}")
         return stream.read()
+
+
+RECOVERABLE_ERRORS = (MilanError, TypeError, ArithmeticError, IndexError, KeyError,
+                      ValueError, OSError, EOFError)
+RUNTIME_ERRORS = RECOVERABLE_ERRORS + (NameError, RecursionError)
 
 
 def execute(source, *, source_path=None, files_root=None, check=False):
@@ -265,6 +318,26 @@ def execute(source, *, source_path=None, files_root=None, check=False):
         with path.open("x", encoding="utf-8", newline="") as stream:
             stream.write(content)
 
+    def update_file(name, content):
+        path = data_path(name)
+        if not isinstance(content, str):
+            raise MilanError("El contenido del archivo debe ser texto")
+        info = path.lstat()
+        if not stat.S_ISREG(info.st_mode) or info.st_nlink > 1:
+            raise MilanError("Actualiza un archivo normal sin enlaces")
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w", encoding="utf-8", newline="", dir=files, delete=False
+            ) as stream:
+                temporary = Path(stream.name)
+                stream.write(content)
+            temporary.chmod(stat.S_IMODE(info.st_mode))
+            temporary.replace(path)
+        finally:
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
+
     included = set()
 
     def include(name):
@@ -273,14 +346,15 @@ def execute(source, *, source_path=None, files_root=None, check=False):
             exec(programs[name], environment, environment)
 
     environment = {"__builtins__": {
-        **BASIC, "incluir": include, "include": include,
+        **BASIC, "_errores_milan": RECOVERABLE_ERRORS,
+        "incluir": include, "include": include,
         "leer_archivo": read_file, "read_file": read_file,
         "escribir_archivo": write_file, "write_file": write_file,
+        "actualizar_archivo": update_file, "update_file": update_file,
     }}
     try:
         exec(code, environment, environment)
-    except (MilanError, TypeError, NameError, ArithmeticError, RecursionError, IndexError,
-            ValueError, OSError, EOFError) as exc:
+    except RUNTIME_ERRORS as exc:
         frame = exc.__traceback__
         filename, line = None, None
         while frame:
@@ -292,6 +366,7 @@ def execute(source, *, source_path=None, files_root=None, check=False):
             NameError: "Variable o función sin definir",
             ZeroDivisionError: "No se puede dividir entre cero",
             IndexError: "Índice fuera de la lista o el texto",
+            KeyError: "Clave ausente en el diccionario",
             TypeError: "Revisa los tipos de los valores y los argumentos",
             EOFError: "No hay más datos de entrada",
             RecursionError: "Hay demasiadas llamadas anidadas",
