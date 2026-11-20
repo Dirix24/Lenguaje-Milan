@@ -1,0 +1,3 @@
+nota = entrada("Escribe una nota: ")
+escribir_archivo("nota.txt", nota)
+print("Nota guardada:", read_file("nota.txt"))

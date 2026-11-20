@@ -55,7 +55,7 @@ class TestMilan(unittest.TestCase):
         self.assertEqual(self.run_milan(source), "ok")
 
     def test_list_indexing(self):
-        self.assertEqual(self.run_milan("datos = [10, 20, 30]\\nmostrar(datos[1])"), "20")
+        self.assertEqual(self.run_milan("datos = [10, 20, 30]\nmostrar(datos[1])"), "20")
 
     def test_function_can_call_another_function(self):
         source = "funcion doble(x) {\nreturn x * 2\n}\nfuncion resultado(x) {\nreturn doble(x)\n}\nmostrar(resultado(4))"
@@ -63,7 +63,7 @@ class TestMilan(unittest.TestCase):
 
     def test_english_loop(self):
         source = 'for n in [1, 2] {\nprint(n)\n}'
-        self.assertEqual(self.run_milan(source), "1\\n2")
+        self.assertEqual(self.run_milan(source), "1\n2")
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,4 @@
+incluir("herramientas.milan")
+
+ventas = [3, 7, 10]
+mostrar("Total de ventas:", total(ventas))

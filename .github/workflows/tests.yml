@@ -5,16 +5,45 @@ on:
     branches: [main, "feat/**"]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   tests:
-    runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.10", "3.12"]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.10", "3.13"]
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Ejecutar pruebas
-        run: python -m unittest discover -s tests -v
+          python-version: ${{ matrix.python }}
+      - run: python -m unittest discover -s tests -v
+      - run: python milan.py examples/saludar.milan
+      - run: python milan.py examples/resumen.milan
+
+  vsix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verificar integración de la extensión
+        run: node --test tests/test_extension.js
+      - name: Empaquetar extensión
+        working-directory: vscode-milan
+        run: npx --yes @vscode/vsce@3.6.2 package --no-dependencies -o milan.vsix
+      - name: Comprobar intérprete incluido
+        run: |
+          unzip -p vscode-milan/milan.vsix extension/interpreter/milan.py | cmp - milan.py
+          unzip -p vscode-milan/milan.vsix extension/LICENSE.txt | cmp - LICENSE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: milan-vsix
+          path: vscode-milan/milan.vsix

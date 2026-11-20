@@ -1,0 +1,7 @@
+function total(valores) {
+    suma = 0
+    para valor in valores {
+        suma = suma + valor
+    }
+    devolver suma
+}

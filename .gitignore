@@ -9,3 +9,6 @@ bin/
 obj/
 .env
 .DS_Store
+/vscode-milan/interpreter/
+/vscode-milan/LICENSE
+*.vsix

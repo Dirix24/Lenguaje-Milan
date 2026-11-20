@@ -1,47 +1,30 @@
-# 🇪🇸 Milán
+# Milán
 
-> **La única limitación es tu imaginación.**
+> La única limitación es tu imaginación.
 
-Milán es un nuevo lenguaje de programación diseñado para ser fácil de aprender y potente para crear todo tipo de software.
+Milán es un lenguaje de programación gratuito y abierto bajo licencia MIT. Puedes mezclar español e inglés en el mismo programa. Esta rama contiene la candidata **1.0.0-rc.1**.
 
-## 🚀 Objetivo
+## Primer programa
 
-Milán aspira a permitir crear páginas web, aplicaciones, videojuegos, inteligencia artificial, servidores, APIs, bases de datos, automatizaciones, herramientas, sistemas y mucho más.
-
-## 🧠 Filosofía
-
-Milán debe ser fácil para principiantes y potente para profesionales.
+Guarda este código como `saludar.milan`.
 
 ```milan
-mostrar("Hola mundo")
+nombre = "Mundo"
 
-nombre = "Ana"
-
-si nombre == "Ana" {
-    mostrar("Hola Ana")
+funcion saludar(persona) {
+    mostrar("Hola", persona)
 }
+
+saludar(nombre)
 ```
 
-## 🌎 Español e inglés
+Instala Python 3.10 o posterior y descarga el repositorio. Desde su carpeta, ejecuta `python3 milan.py examples/saludar.milan` en Linux o macOS, o `py -3 milan.py examples/saludar.milan` en Windows. Verás `Hola Mundo`. El intérprete usa la biblioteca estándar de Python.
 
-Milán incorporará un sistema para mostrar la equivalencia de sus palabras con la terminología habitual en inglés.
+En VS Code, instala el VSIX de Milán, abre la carpeta de tu proyecto y pulsa **Ejecutar archivo actual** en un archivo `.milan`. La extensión incluye el intérprete y detecta Python.
 
-| Milán | Inglés |
-|---|---|
-| mostrar | print |
-| si | if |
-| sino | else |
-| para | for |
-| mientras | while |
-| funcion | function |
-| devolver | return |
-| verdadero | true |
-| falso | false |
-
-## 📌 Estado
-
-**Versión 0.1.0 — Diseño inicial**
-
-## 🌟 Visión
-
-Milán es un lenguaje general. La única limitación es tu imaginación.
+- [Instalación y ejecución](docs/ejecutar.md)
+- [Referencia bilingüe](docs/lenguaje.md)
+- [Ejemplos](examples/)
+- [Extensión de VS Code](vscode-milan/README.md)
+- [Pruebas](tests/README.md)
+- [Cambios y trabajo pendiente](CHANGELOG.md)
