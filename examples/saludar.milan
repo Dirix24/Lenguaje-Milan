@@ -1,0 +1,7 @@
+nombre = "Mundo"
+
+funcion saludar(persona) {
+    mostrar("Hola", persona)
+}
+
+saludar(nombre)

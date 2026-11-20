@@ -1,1 +1,85 @@
-{"name":"milan-language","displayName":"Milán Language","version":"0.1.0","publisher":"milan-community","engines":{"vscode":"^1.85.0"},"main":"./extension.js","activationEvents":["onCommand:milan.runFile"],"contributes":{"languages":[{"id":"milan","aliases":["Milán"],"extensions":[".milan"],"configuration":"./language-configuration.json"}],"grammars":[{"language":"milan","scopeName":"source.milan","path":"./syntaxes/milan.tmLanguage.json"}],"commands":[{"command":"milan.runFile","title":"Milán: Ejecutar archivo actual"}],"configuration":{"title":"Milán","properties":{"milan.pythonPath":{"type":"string","default":"python3"},"milan.interpreterPath":{"type":"string","default":""}}}}}
+{
+  "name": "milan-language",
+  "displayName": "Milán Language",
+  "version": "1.0.0-rc.1",
+  "publisher": "milan-community",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:milan",
+    "onCommand:milan.runFile"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "milan",
+        "aliases": [
+          "Milán"
+        ],
+        "extensions": [
+          ".milan"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "milan",
+        "scopeName": "source.milan",
+        "path": "./syntaxes/milan.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "milan.runFile",
+        "title": "Milán: Ejecutar archivo actual",
+        "icon": "$(play)"
+      }
+    ],
+    "configuration": {
+      "title": "Milán",
+      "properties": {
+        "milan.pythonPath": {
+          "type": "string",
+          "default": "",
+          "description": "Ejecutable de Python. Vacío para buscar Python automáticamente.",
+          "scope": "machine"
+        },
+        "milan.interpreterPath": {
+          "type": "string",
+          "default": "",
+          "description": "Ruta de milan.py. Vacía para usar el intérprete incluido.",
+          "scope": "machine"
+        }
+      }
+    },
+    "menus": {
+      "editor/title": [
+        {
+          "command": "milan.runFile",
+          "when": "resourceLangId == milan",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "description": "Ejecuta y aprende Milán en español e inglés.",
+  "license": "MIT",
+  "categories": [
+    "Programming Languages"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dirix24/Lenguaje-Milan.git"
+  },
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "node prepare.js"
+  }
+}

@@ -1,10 +1,33 @@
-# 🇪🇸 Milán — Un lenguaje, muchas posibilidades
+# Milán
 
-> **La única limitación es tu imaginación.**
+> La única limitación es tu imaginación.
 
-**Milán** es un proyecto comunitario de lenguaje de programación universal, gratuito y de código abierto. Su propósito es reunir capacidades habituales de diferentes ecosistemas en una experiencia coherente, fácil de aprender y suficientemente potente para el desarrollo profesional.
+Milán es un lenguaje de programación gratuito y abierto bajo licencia MIT. Puedes mezclar español e inglés en el mismo programa. Esta rama contiene la candidata **1.0.0-rc.1**.
 
-**Estado actual: prototipo experimental 0.1.x.** El intérprete inicial está implementado en Python. Las características descritas como *visión* o *planificadas* aún no están disponibles. El objetivo no es prometer que Milán reemplazará por completo a todos los lenguajes, sino reducir la necesidad de aprender varias sintaxis para tareas comunes.
+## Primer programa
+
+Guarda este código como `saludar.milan`.
+
+```milan
+nombre = "Mundo"
+
+funcion saludar(persona) {
+    mostrar("Hola", persona)
+}
+
+saludar(nombre)
+```
+
+Instala Python 3.10 o posterior y descarga el repositorio. Desde su carpeta, ejecuta `python3 milan.py examples/saludar.milan` en Linux o macOS, o `py -3 milan.py examples/saludar.milan` en Windows. Verás `Hola Mundo`. El intérprete usa la biblioteca estándar de Python.
+
+En VS Code, instala el VSIX de Milán, abre la carpeta de tu proyecto y pulsa **Ejecutar archivo actual** en un archivo `.milan`. La extensión incluye el intérprete y detecta Python.
+
+- [Instalación y ejecución](docs/ejecutar.md)
+- [Referencia bilingüe](docs/lenguaje.md)
+- [Ejemplos](examples/)
+- [Extensión de VS Code](vscode-milan/README.md)
+- [Pruebas](tests/README.md)
+- [Cambios y trabajo pendiente](CHANGELOG.md)
 
 ## Principios
 
@@ -15,50 +38,9 @@
 - **Ecosistema interoperable:** bibliotecas propias y puentes con otros lenguajes, comenzando por Python.
 - **Seguridad y transparencia:** permisos explícitos para operaciones sensibles, aislamiento cuando sea posible y cambios propuestos por IA sujetos a aprobación.
 
-## ¿Qué funciona hoy?
+## Visión del lenguaje
 
-El repositorio contiene un intérprete experimental `milan.py` basado en Python, ejemplos `.milan` y pruebas iniciales. Su diseño actual incluye traducción de palabras clave y un subconjunto limitado de expresiones, asignaciones, condiciones, bucles y funciones. **No se ha establecido todavía una compatibilidad completa ni una suite de pruebas verificada en todos los sistemas.** No ejecutes código no confiable: el intérprete experimental no constituye una sandbox de seguridad.
-
-### Primer programa
-
-```milan
-nombre = "Ana"
-mostrar("Hola " + nombre)
-
-funcion sumar(a, b) {
-    devolver a + b
-}
-
-mostrar(sumar(5, 3))
-```
-
-### Ejecutar el prototipo
-
-Requiere Python 3.10 o superior. Desde la raíz del repositorio:
-
-```bash
-python3 milan.py examples/hola.milan
-python3 milan.py examples/funciones.milan
-python3 -m unittest discover -s tests -v
-```
-
-Consulta [la guía de ejecución](docs/ejecutar.md) para conocer las limitaciones. El código de ejemplo no implica que estén disponibles todas las características futuras.
-
-## Visión del lenguaje (todavía no implementada completamente)
-
-### Sintaxis flexible y bilingüe
-
-Se quiere admitir español e inglés combinados en el mismo programa, con traducción de palabras clave y bloques tanto con llaves como con indentación, siempre que las reglas sean inequívocas.
-
-```milan
-# Ejemplo conceptual de sintaxis bilingüe futura
-funcion saludar(nombre) {
-    print("Hola " + nombre)
-}
-saludar("Milán")
-```
-
-Se prevén alternativas sencillas a la sintaxis clásica cuando no generen ambigüedad. Los ejemplos conceptuales **no son una garantía de ejecución en el intérprete actual**.
+La candidata ya permite mezclar español e inglés con bloques entre llaves. La sintaxis por indentación y las herramientas de traducción se contemplan en la hoja de ruta.
 
 ### Tipos y paradigmas
 
@@ -69,7 +51,7 @@ Se prevén alternativas sencillas a la sintaxis clásica cuando no generen ambig
 
 ### Ejecución y rendimiento
 
-El camino propuesto comienza con un prototipo en Python y avanza hacia un núcleo propio en **Rust**. Se estudiarán tecnologías como **LLVM** para compilación nativa y **WebAssembly** para entornos compatibles, conservando un modo interpretado. El objetivo es ofrecer un modo sencillo y otro optimizado; no se prometen velocidades concretas.
+El intérprete actual está escrito en Python. La hoja de ruta contempla un núcleo propio en **Rust**. Se estudiarán tecnologías como **LLVM** para compilación nativa y **WebAssembly** para entornos compatibles, conservando un modo interpretado. El objetivo es ofrecer un modo sencillo y otro optimizado; no se prometen velocidades concretas.
 
 ### Bibliotecas y plataformas
 
@@ -80,7 +62,7 @@ Milán aspira a servir para web, aplicaciones, videojuegos, IA, servidores, auto
 Milán **no dependerá de un editor concreto**. La visión incluye:
 
 - Milán Studio, editor propio con perfiles de accesibilidad, colores y tipografías personalizables, navegación por teclado y modo sin distracciones.
-- Extensiones y soporte para VS Code, VSCodium, Neovim y otros editores, según la comunidad contribuya.
+- Ampliación del soporte a VSCodium, Neovim y otros editores, según las contribuciones de la comunidad.
 - Errores en modo principiante (explicaciones y soluciones) y profesional (detalles técnicos).
 - Depuración y aprendizaje interactivos con tutoriales, ejercicios y ejemplos visuales.
 - Gestor de paquetes por comandos y catálogo visual.

@@ -1,1 +1,51 @@
-{"scopeName":"source.milan","patterns":[{"name":"comment.line.number-sign.milan","match":"#.*$"},{"name":"string.quoted.double.milan","begin":"\"","end":"\""},{"name":"keyword.control.milan","match":"\\b(si|sino|if|else|mientras|while|para|for|funcion|function|devolver|return)\\b"}]}
+{
+  "scopeName": "source.milan",
+  "patterns": [
+    {
+      "name": "comment.line.number-sign.milan",
+      "match": "#.*$"
+    },
+    {
+      "name": "string.quoted.double.milan",
+      "begin": "\"",
+      "end": "\"|$",
+      "patterns": [
+        {
+          "name": "constant.character.escape.milan",
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.single.milan",
+      "begin": "'",
+      "end": "'|$",
+      "patterns": [
+        {
+          "name": "constant.character.escape.milan",
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "keyword.control.milan",
+      "match": "\\b(si|sino|if|else|elif|mientras|while|para|for|en|in|funcion|function|devolver|return)\\b"
+    },
+    {
+      "name": "keyword.operator.logical.milan",
+      "match": "\\b(y|o|no|and|or|not)\\b"
+    },
+    {
+      "name": "constant.language.boolean.milan",
+      "match": "\\b(verdadero|falso|true|false)\\b"
+    },
+    {
+      "name": "support.function.milan",
+      "match": "\\b(mostrar|print|entrada|input|longitud|len|rango|range|incluir|include|leer_archivo|read_file|escribir_archivo|write_file)\\b"
+    },
+    {
+      "name": "constant.numeric.milan",
+      "match": "\\b\\d+(?:\\.\\d+)?\\b"
+    }
+  ]
+}

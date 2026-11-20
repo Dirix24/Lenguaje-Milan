@@ -1,14 +1,3 @@
-# 🇪🇸 Milán → 🇬🇧 Inglés
+# Equivalencias en inglés
 
-| Milán | Inglés |
-|---|---|
-| mostrar | print |
-| si | if |
-| sino | else |
-| para | for |
-| en | in |
-| mientras | while |
-| funcion | function |
-| devolver | return |
-| verdadero | true |
-| falso | false |
+Consulta la [tabla bilingüe y los ejemplos](lenguaje.md). Puedes usar ambas variantes en el mismo archivo. Prueba `examples/bilingue.milan` o `examples/resumen.milan`.
