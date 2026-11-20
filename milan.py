@@ -89,7 +89,7 @@ def validate(tree):
             if node.decorator_list or node.returns or getattr(node, "type_params", []):
                 raise MilanError("Decoradores y anotaciones no admitidos")
         if isinstance(node, ast.Call):
-            if not isinstance(node.func, ast.Name) or node.func.id not in BUILTINS | functions or node.keywords:
+            if not isinstance(node.func, ast.Name) or node.func.id not in (set(BUILTINS) | functions) or node.keywords:
                 raise MilanError("Solo se permiten llamadas a funciones de Milán y funciones básicas")
         if isinstance(node, ast.Assign) and any(not isinstance(t, ast.Name) for t in node.targets):
             raise MilanError("Solo se admiten asignaciones a variables")
