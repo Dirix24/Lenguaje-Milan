@@ -1,0 +1,7 @@
+function saludar(nombre) {
+    print("Hola " + nombre)
+}
+
+saludar("comunidad")
+datos = [10, 20, 30]
+mostrar(datos[1])
