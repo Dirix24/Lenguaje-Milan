@@ -29,7 +29,7 @@
     },
     {
       "name": "keyword.control.milan",
-      "match": "\\b(si|sino|if|else|elif|mientras|while|para|for|en|in|funcion|function|devolver|return)\\b"
+      "match": "\\b(si|sino|if|else|elif|mientras|while|para|for|en|in|funcion|function|devolver|return|intentar|try|capturar|except)\\b"
     },
     {
       "name": "keyword.operator.logical.milan",
@@ -41,7 +41,7 @@
     },
     {
       "name": "support.function.milan",
-      "match": "\\b(mostrar|print|entrada|input|longitud|len|rango|range|incluir|include|leer_archivo|read_file|escribir_archivo|write_file)\\b"
+      "match": "\\b(mostrar|print|entrada|input|longitud|len|rango|range|incluir|include|leer_archivo|read_file|escribir_archivo|write_file|actualizar_archivo|update_file|entero|int|decimal|float|agregar|append|quitar|pop|a_json|to_json|desde_json|from_json)\\b"
     },
     {
       "name": "constant.numeric.milan",

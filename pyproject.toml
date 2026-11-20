@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lenguaje-milan"
+version = "1.1.0rc1"
+description = "Intérprete bilingüe de Milán"
+requires-python = ">=3.10"
+
+[project.scripts]
+milan = "milan:main"
+
+[tool.setuptools]
+py-modules = ["milan"]

@@ -1,0 +1,45 @@
+# Inicia con un archivo nuevo o carga las tareas guardadas.
+intentar {
+    escribir_archivo("tareas.json", "[]")
+} capturar {
+    pass
+}
+tareas = desde_json(leer_archivo("tareas.json"))
+opcion = ""
+mientras opcion != "0" {
+    mostrar("1 Ver | 2 Añadir | 3 Completar | 4 Quitar | 0 Salir")
+    opcion = entrada("Opción: ")
+    si opcion == "1" {
+        para indice en rango(longitud(tareas)) {
+            tarea = tareas[indice]
+            estado = "pendiente"
+            si tarea["hecha"] {
+                estado = "hecha"
+            }
+            mostrar(indice + 1, estado, tarea["titulo"])
+        }
+    } sino si opcion == "2" {
+        titulo = entrada("Tarea: ")
+        si titulo != "" {
+            agregar(tareas, {"titulo": titulo, "hecha": falso})
+            actualizar_archivo("tareas.json", a_json(tareas))
+        }
+    } sino si opcion == "3" o opcion == "4" {
+        indice = -1
+        intentar {
+            indice = entero(entrada("Número de tarea: ")) - 1
+        } capturar {
+            mostrar("Escribe un número entero.")
+        }
+        si indice >= 0 y indice < longitud(tareas) {
+            si opcion == "3" {
+                tareas[indice]["hecha"] = verdadero
+            } sino {
+                quitar(tareas, indice)
+            }
+            actualizar_archivo("tareas.json", a_json(tareas))
+        } sino {
+            mostrar("Ese número no corresponde a una tarea.")
+        }
+    }
+}
