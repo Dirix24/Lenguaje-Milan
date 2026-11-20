@@ -4,7 +4,7 @@
 
 > La única limitación es tu imaginación.
 
-Milán es un lenguaje de programación gratuito y abierto bajo licencia MIT. Puedes mezclar español e inglés en el mismo programa. Esta rama contiene la candidata **1.1.0-rc.1**.
+Milán es un lenguaje de programación gratuito y abierto bajo licencia MIT. Puedes mezclar español e inglés en el mismo programa. Esta rama contiene la candidata **1.1.0-rc.2**.
 
 ## Primer programa
 

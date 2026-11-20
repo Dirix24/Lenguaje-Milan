@@ -27,9 +27,9 @@ WORDS = {
     "en": "in", "funcion": "def", "function": "def", "devolver": "return",
     "verdadero": "True", "falso": "False", "true": "True", "false": "False",
     "y": "and", "o": "or", "no": "not",
+    "intentar": "try", "capturar": "except", "romper": "break", "continuar": "continue",
 }
 HEADERS = {"if", "elif", "else", "while", "for", "def", "try", "except"}
-WORDS.update(intentar="try", capturar="except")
 # Cada cadena es un solo token. Las llaves y los comentarios se reconocen fuera de ella.
 TOKEN = re.compile(r"""\s+|\#.*|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\w+|.""")
 STRING_PREFIXES = {"b", "br", "f", "fr", "r", "rb", "rf", "u", "t", "tr", "rt"}
@@ -118,8 +118,10 @@ ALLOWED = (
     ast.Lt, ast.LtE, ast.Gt, ast.GtE, ast.If, ast.While, ast.For,
     ast.List, ast.Tuple, ast.Call, ast.FunctionDef, ast.arguments,
     ast.Subscript, ast.Slice, ast.arg, ast.Return, ast.Pass,
-    ast.Dict, ast.Try, ast.ExceptHandler,
+    ast.Dict, ast.Try, ast.ExceptHandler, ast.Break, ast.Continue, ast.In, ast.NotIn,
 )
+
+
 def append_item(items, value):
     if not isinstance(items, list):
         raise TypeError("agregar requiere una lista")
@@ -141,6 +143,10 @@ BASIC = {
     "len": len, "longitud": len, "input": input, "entrada": input,
     "entero": int, "int": int, "decimal": float, "float": float,
     "agregar": append_item, "append": append_item, "quitar": pop_item, "pop": pop_item,
+    "recortar": str.strip, "trim": str.strip,
+    "minusculas": str.lower, "lower": str.lower,
+    "mayusculas": str.upper, "upper": str.upper,
+    "dividir": str.split, "split": str.split, "unir": str.join, "join": str.join,
     "a_json": to_json, "to_json": to_json, "desde_json": json.loads, "from_json": json.loads,
 }
 INCLUDE_NAMES = {"incluir", "include"}
@@ -214,7 +220,12 @@ def prepare(source, filename):
                 node.type = ast.copy_location(ast.Name(id="_errores_milan", ctx=ast.Load()), node)
         return compile(tree, filename, "exec"), includes
     except SyntaxError as exc:
-        raise MilanError(f"Sintaxis inválida ({exc.msg})", exc.lineno, filename) from exc
+        loop_errors = {
+            "'break' outside loop": "Usa romper o break dentro de un bucle",
+            "'continue' not properly in loop": "Usa continuar o continue dentro de un bucle",
+        }
+        message = loop_errors.get(exc.msg, f"Sintaxis inválida ({exc.msg})")
+        raise MilanError(message, exc.lineno, filename) from exc
     except (ValueError, RecursionError) as exc:
         raise MilanError("El código contiene una expresión inválida o demasiado compleja",
                          source=filename) from exc

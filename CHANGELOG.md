@@ -1,5 +1,10 @@
 # Cambios de Milán
 
+## 1.1.0-rc.2
+
+- Añade utilidades bilingües de texto, comprobación de pertenencia y control de bucles.
+- Añade búsqueda de tareas sin distinguir mayúsculas y recorta los espacios en las entradas.
+
 ## 1.1.0-rc.1
 
 - Añade conversiones numéricas, edición de listas, diccionarios y conversión JSON.

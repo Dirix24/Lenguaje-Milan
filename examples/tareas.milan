@@ -5,13 +5,22 @@ intentar {
     pass
 }
 tareas = desde_json(leer_archivo("tareas.json"))
-opcion = ""
-mientras opcion != "0" {
-    mostrar("1 Ver | 2 Añadir | 3 Completar | 4 Quitar | 0 Salir")
-    opcion = entrada("Opción: ")
-    si opcion == "1" {
+mientras verdadero {
+    mostrar("1 Ver | 2 Añadir | 3 Completar | 4 Quitar | 5 Buscar | 0 Salir")
+    opcion = recortar(entrada("Opción: "))
+    si opcion == "0" {
+        romper
+    }
+    si opcion == "1" o opcion == "5" {
+        filtro = ""
+        si opcion == "5" {
+            filtro = minusculas(recortar(entrada("Buscar: ")))
+        }
         para indice en rango(longitud(tareas)) {
             tarea = tareas[indice]
+            si filtro no en minusculas(tarea["titulo"]) {
+                continuar
+            }
             estado = "pendiente"
             si tarea["hecha"] {
                 estado = "hecha"
@@ -19,7 +28,7 @@ mientras opcion != "0" {
             mostrar(indice + 1, estado, tarea["titulo"])
         }
     } sino si opcion == "2" {
-        titulo = entrada("Tarea: ")
+        titulo = recortar(entrada("Tarea: "))
         si titulo != "" {
             agregar(tareas, {"titulo": titulo, "hecha": falso})
             actualizar_archivo("tareas.json", a_json(tareas))

@@ -13,7 +13,9 @@ const WORDS = [
   'leer_archivo', 'read_file', 'escribir_archivo', 'write_file',
   'actualizar_archivo', 'update_file', 'intentar', 'try', 'capturar', 'except',
   'entero', 'int', 'decimal', 'float', 'agregar', 'append', 'quitar', 'pop',
-  'a_json', 'to_json', 'desde_json', 'from_json'
+  'a_json', 'to_json', 'desde_json', 'from_json', 'romper', 'break', 'continuar', 'continue',
+  'recortar', 'trim', 'minusculas', 'lower', 'mayusculas', 'upper',
+  'dividir', 'split', 'unir', 'join'
 ];
 
 function settings(context, uri) {

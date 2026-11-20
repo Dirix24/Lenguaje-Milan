@@ -69,3 +69,17 @@ intentar {
 ```
 
 `actualizar_archivo/update_file(nombre, texto)` reemplaza el contenido de un archivo existente en el directorio de `--files`. Rechaza enlaces y escribe primero en un archivo temporal. Para crear un archivo nuevo, usa `escribir_archivo/write_file`.
+
+## Texto y control de bucles
+
+| Español | Inglés | Resultado |
+|---|---|---|
+| `recortar(" hola ")` | `trim(" hola ")` | `"hola"` |
+| `minusculas("HOLA")` | `lower("HOLA")` | `"hola"` |
+| `mayusculas("hola")` | `upper("hola")` | `"HOLA"` |
+| `dividir("a,b", ",")` | `split("a,b", ",")` | `["a", "b"]` |
+| `unir("-", ["a", "b"])` | `join("-", ["a", "b"])` | `"a-b"` |
+
+`valor en colección` (`in`) busca un elemento en una lista, una clave en un diccionario o un fragmento en un texto. Usa `no en` (`not in`) para comprobar que está ausente.
+
+Dentro de `mientras` o `para`, `romper/break` sale del bucle más cercano y `continuar/continue` salta a su siguiente iteración.

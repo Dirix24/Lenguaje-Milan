@@ -78,3 +78,40 @@ try {
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertEqual(json.loads((Path(tmp) / "tareas.json").read_text(
                     encoding="utf-8")), expected)
+
+    def test_text_and_loop_control(self):
+        source = '''
+para valor en split(" , ÁRBOL ,FIN,resto", ",") {
+    palabra = minusculas(trim(valor))
+    si palabra == "" {
+        continue
+    }
+    si palabra in ["fin"] {
+        romper
+    }
+    print(join("-", [upper(palabra), palabra]))
+}
+'''
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            execute(source)
+        self.assertEqual(output.getvalue(), "ÁRBOL-árbol\n")
+        for instruction in ("romper", "continuar"):
+            with self.subTest(instruction=instruction):
+                with self.assertRaisesRegex(MilanError, "Línea 2: .*dentro de un bucle"):
+                    execute("\n" + instruction, check=True)
+
+    def test_search_persistent_tasks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            cli = [sys.executable, str(ROOT / "milan.py"), "--files", tmp,
+                   str(ROOT / "examples" / "tareas.milan")]
+            result = subprocess.run(
+                cli, input=" 2 \n  Leer Milán  \n2\nOtra tarea\n5\n MILÁN \n0\n",
+                text=True, encoding="utf-8", capture_output=True, timeout=10,
+                env=dict(os.environ, PYTHONUTF8="1")
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("1 pendiente Leer Milán", result.stdout)
+            self.assertNotIn("pendiente Otra tarea", result.stdout)
+            tasks = json.loads((Path(tmp) / "tareas.json").read_text(encoding="utf-8"))
+            self.assertEqual(tasks[0]["titulo"], "Leer Milán")
